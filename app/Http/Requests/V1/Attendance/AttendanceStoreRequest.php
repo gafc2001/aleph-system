@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\V1\Attendance;
 
+use App\Rules\IsAssociative;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class AttendanceStoreRequest extends FormRequest
 {
@@ -23,10 +27,12 @@ class AttendanceStoreRequest extends FormRequest
      */
     public function rules()
     {
+        
         return [
-            "*.id" => "required|integer|min:1",
-            "*.name" => "required|string",
-            "*.date_time" => "required|date|date_format:m/d/Y H:i:s",
+            "data" => ["required",new IsAssociative(),"array","max:10"],
+            "data.*.id" => "required|integer|min:1",
+            "data.*.name" => "required|string",
+            "data.*.date_time" => "required|date|date_format:m/d/Y H:i:s",
         ];
     }
 }

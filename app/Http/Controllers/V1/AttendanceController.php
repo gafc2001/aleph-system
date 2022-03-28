@@ -5,8 +5,15 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\V1\Attendance\AttendanceStoreRequest;
+use App\Models\Attendance;
+use App\Repositories\AttendanceRepository;
+
 class AttendanceController extends Controller
 {
+    private $repository;
+    public function __construct(AttendanceRepository $repository){
+        $this->repository = $repository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +32,8 @@ class AttendanceController extends Controller
      */
     public function store(AttendanceStoreRequest $request)
     {
-        return $request->all();
+        $response = $this->repository->store($request->data);
+        return response()->json($response);
     }
 
     /**

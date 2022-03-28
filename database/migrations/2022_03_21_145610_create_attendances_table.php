@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->time('checkin_time');
+            $table->time('checkin_time')->nullable();
             $table->time('lunch_time')->nullable();
             $table->time('lunch_end_time')->nullable();
             $table->time('checkout_time')->nullable();
