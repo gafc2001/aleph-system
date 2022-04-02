@@ -14,7 +14,7 @@ class Attendance extends Model
         "date",
     ];
     use HasFactory;
-    private $day = [
+    private $weekDays = [
         "lunes",
         "martes",
         "miercoles",
@@ -28,7 +28,7 @@ class Attendance extends Model
     }
     public function day() : Attribute {
         return Attribute::make(
-            set: fn ($value) => $this->day[$value]
+            set: fn ($value) => $this->weekDays[$value-1]
         );
     }
 }

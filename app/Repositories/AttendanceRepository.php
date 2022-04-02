@@ -74,7 +74,7 @@ class AttendanceRepository
         if ($time >= "13:31" && $time <= "14:30") {
             return "lunch_end_time";
         }
-        if ($time > "14:30") {
+        if ($time >= "14:31") {
             return "checkout_time";
         }
     }

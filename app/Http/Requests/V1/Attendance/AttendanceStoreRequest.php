@@ -29,7 +29,7 @@ class AttendanceStoreRequest extends FormRequest
     {
         
         return [
-            "data" => ["required",new IsAssociative(),"array","max:10"],
+            "data" => ["required",new IsAssociative(),"array","max:20"],
             "data.*.id" => "required|integer|min:1",
             "data.*.name" => "required|string",
             "data.*.date_time" => "required|date|date_format:m/d/Y H:i:s",
