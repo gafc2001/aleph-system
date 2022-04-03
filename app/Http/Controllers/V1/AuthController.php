@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Auth\LoginRequest;
 use App\Http\Requests\V1\Auth\SignUpRequest;
 use App\Http\Resources\V1\Auth\AuthResource;
+use App\Http\Resources\V1\Auth\AuthUserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     public function __construct(){
-        $this->middleware("auth:api")->only('revoke');
+        $this->middleware("auth:api")->only(['revoke','user']);
     }
     public function login(LoginRequest $request){
         if(Auth::attempt($request->all())){
@@ -40,5 +41,8 @@ class AuthController extends Controller
         return response()->json([
             "message" => "Revoke token access succesfully",
         ]);
+    }
+    public function user(Request $request){
+        return new AuthUserResource($request->user());
     }
 }
