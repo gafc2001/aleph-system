@@ -10,7 +10,7 @@ use App\Http\Controllers\V1\AuthController;
 
 Route::middleware('auth:api')->group(function (){
     Route::apiResource('attendances',AttendanceController::class);
-    
+    Route::post('upload/excel',[AttendanceController::class,'upload']);
 });
 
 //Security
