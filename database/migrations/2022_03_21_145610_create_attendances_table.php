@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->time('checkin_time')->nullable();
-            $table->time('lunch_time')->nullable();
-            $table->time('lunch_end_time')->nullable();
             $table->time('checkout_time')->nullable();
             $table->enum('day',['lunes',
                                 'martes',

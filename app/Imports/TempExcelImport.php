@@ -63,14 +63,8 @@ class TempExcelImport implements WithHeadingRow,OnEachRow
         if ($time < "10:00") {
             return "checkin_time";
         }
-        if ($time >= "10:01" && $time <= "13:30") {
-            return "lunch_time";
-        }
-        if ($time >= "13:31" && $time <= "14:30") {
-            return "lunch_end_time";
-        }
-        if ($time >= "14:31") {
+        // if ($time >= "14:31") {
             return "checkout_time";
-        }
+        // }
     }
 }
