@@ -2,9 +2,13 @@
 
 namespace App\Imports;
 
-use App\Models\TempExcel;
-use Maatwebsite\Excel\Concerns\ToModel;
+use App\Models\Attendance;
+use App\Models\User;
+use Carbon\Carbon;
+
+use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 
 class TempExcelImport implements WithHeadingRow,OnEachRow
 {
@@ -13,14 +17,60 @@ class TempExcelImport implements WithHeadingRow,OnEachRow
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function model(array $row)
+    public function onRow(Row $row){
+        $row = $row->toCollection();
+        $data = $this->cast($row);
+        $this->storeRow($data);
+    }
+    private function storeRow($row)
     {
-        return new TempExcel([
-            'full_name' => $row['id_de_usuario'],
-            'time' => $row['nombre'],
-            'state' => $row['tiempo'],
-            'location' => $row['nombre_de_la_terminal'],
-        ]);
+        $attendance = Attendance::firstOrNew(
+            [
+                'user_id' => $this->getOrCreateUser($row['nombre']),
+                'date' => $row['date'],
+            ],[
+                'created_at' =>Carbon::now(),
+                'updated_at' => Carbon::now(), 
+            ]
+        );
+        $attendance[$row['time_type']] = $row['time'];
+        $attendance->day = $row['date_time']->dayOfWeek;
+        $attendance->save();
+    }
+    private function cast($row)
+    {  
+        $row['date_time'] = Carbon::createFromFormat("m/d/Y H:i:s", $row['tiempo']);
+        $row['date'] = $row['date_time']->format('Y-m-d');
+        $row['time'] = $row['date_time']->format('H:i');
+        $row['time_type'] = $this->getTimeType($row['time']);
+        return $row;
+    }
+    private function getOrCreateUser($name){
+        [$first_name,$last_name] = explode('.', $name);
 
+        $user = User::firstOrCreate(
+            ['first_name' => $first_name],
+            [
+                'last_name' => $last_name,
+                'created_at' =>Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
+        return $user->id;
+    }
+    private function getTimeType($time)
+    {  
+        if ($time < "10:00") {
+            return "checkin_time";
+        }
+        if ($time >= "10:01" && $time <= "13:30") {
+            return "lunch_time";
+        }
+        if ($time >= "13:31" && $time <= "14:30") {
+            return "lunch_end_time";
+        }
+        if ($time >= "14:31") {
+            return "checkout_time";
+        }
     }
 }
