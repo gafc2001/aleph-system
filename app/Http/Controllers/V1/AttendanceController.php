@@ -41,9 +41,9 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AttendanceStoreRequest $request)
+    public function store(Request $request)
     {
-        $response = $this->repository->importExcel($request->data);
+        $response = $this->repository->importExcel('1AXVYnnaGZzPHWXlUsmRaWSt5SCLZdY19Ad7wMAf.xls');
         return response()->json($response);
     }
 
