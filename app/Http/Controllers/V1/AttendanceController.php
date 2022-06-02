@@ -23,10 +23,9 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        //
+        $result = $this->repository->getSummary();
+        return response()->json($result);
     }
-
-
     public function upload(AttendanceUploadRequest $request){
         $file = $request->file('excel');
         $result = $this->repository->uploadExcel($file);

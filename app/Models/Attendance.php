@@ -31,4 +31,24 @@ class Attendance extends Model
             set: fn ($value) => $this->weekDays[$value-1]
         );
     }
+    public function info(){
+        $userAttendances =[];
+        $users = $this->groupBy('user_id')->get();
+        foreach($users as $user){
+            /** @var User $user
+             * 
+             **/
+            $userObj = User::find($user->user_id);
+            $attendance = [
+                'uid' => $userObj->id,
+                'nameEmployee' => $userObj->full_name,
+                'assitance' => $userObj->assistances('2022-02-17')->count(),
+                'tardies' => $userObj->tardiness('2022-02-17')->count(),
+                'absences' => $userObj->absences('2022-02-17'),
+                'schedule' => "ALEPH SECTOR 1",
+            ];
+            array_push($userAttendances,$attendance);
+        }
+        return $userAttendances;
+    }
 }

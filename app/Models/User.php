@@ -55,18 +55,18 @@ class User extends Authenticatable
     public function attendances(){
         return $this->hasMany(Attendance::class);
     }
-    public function assistances(Carbon $date){
-        $second_date = $date->format('Y-m-d');
-        $first_date = $date->subMonth()->format('Y-m-d');
+    public function assistances($date){
+        $second_date = Carbon::createFromFormat('Y-m-d',$date);
+        $first_date = Carbon::createFromFormat('Y-m-d',$date)->subMonth();
         return $this->attendances()->whereBetween('date',[$first_date,$second_date]);
     }
-    public function tardiness(Carbon $date){
+    public function tardiness($date){
         $range = $this->assistances($date);
         return $range->where('checkin_time','>','09:15');
     }
-    public function absences(Carbon $date){
-        $second_date = $date;
-        $first_date = $date->copy()->subMonth();
+    public function absences($date){
+        $second_date = Carbon::createFromFormat('Y-m-d',$date);
+        $first_date = Carbon::createFromFormat('Y-m-d',$date)->subMonth();
         $total_days = 0;
         $days = CarbonPeriod::create($first_date, $second_date)->toArray();
         
@@ -77,6 +77,13 @@ class User extends Authenticatable
         }
         $result = $total_days - $this->assistances($date)->count();
         return $result;
+    }
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->first_name." ".$this->last_name,
+        );
+        
     }
 
 }

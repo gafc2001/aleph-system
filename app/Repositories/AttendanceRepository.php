@@ -25,6 +25,10 @@ class AttendanceRepository
         Excel::import(new TempExcelImport,"assets/temp/$filename");
         return true;
     }
+    public function getSummary(){
+        $this->model->infO(Carbon::createFromFormat('Y-m-d','2022-02-17'));
+        return null;
+    }
 
 
     
