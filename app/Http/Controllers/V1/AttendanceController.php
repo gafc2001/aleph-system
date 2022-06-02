@@ -23,8 +23,10 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $result = $this->repository->getSummary();
-        return response()->json($result);
+        $result = $this->repository->getStatistics('2022-02-17');
+        return response()->json([
+            "data" => $result
+        ]);
     }
     public function upload(AttendanceUploadRequest $request){
         $file = $request->file('excel');
@@ -32,6 +34,7 @@ class AttendanceController extends Controller
         if(!$result){
             return  response()->json(["message" => "Error al subir el archivo"],400);
         }
+        $this->repository->importExcel($file->hashName());
         return  response()->json(["message" => "Se subio el archivo correctamente"]);
     }
     /**
