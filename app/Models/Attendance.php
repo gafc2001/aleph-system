@@ -33,7 +33,7 @@ class Attendance extends Model
     }
     public function info(){
         $userAttendances =[];
-        $users = $this->groupBy('user_id')->get();
+        $users = $this->select('user_id')->groupBy('user_id')->get();
         foreach($users as $user){
             /** @var User $user **/
             $userObj = User::find($user->user_id);
