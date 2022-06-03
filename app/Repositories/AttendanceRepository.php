@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\V1\EmptyAttendanceException;
 use App\Imports\TempExcelImport;
 use App\Models\Attendance;
 use App\Models\User;
@@ -31,7 +32,11 @@ class AttendanceRepository
         return $this->model->info(Carbon::createFromFormat('Y-m-d','2022-02-17'));
     }
     public function getStatistics($date){
+        
         $attendances = $this->getUserAttendances();
+        if(count($attendances) == 0){
+            throw new EmptyAttendanceException();
+        }
         $total_attendances = 0;
         $total_tardinness = 0;
         $total_absences = 0;

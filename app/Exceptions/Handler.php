@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\V1\EmptyAttendanceException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -36,6 +37,13 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+        $this->renderable(function (EmptyAttendanceException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'No data found.'
+                ], 404);
+            }
         });
     }
 }
