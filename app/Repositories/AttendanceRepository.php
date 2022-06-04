@@ -9,12 +9,13 @@ use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 class AttendanceRepository
 {
 
-    private $model;
+    private Attendance $model;
     
     public function __construct(Attendance $attendance)
     {
@@ -51,19 +52,19 @@ class AttendanceRepository
                 'title' => "Asistencias",
                 'valueMonth' => $total_attendances,
                 'percent' => round(($total_attendances /$total) * 100,2),
-                'valuesXdays' => [40,38,29,27,30,39],    
+                'valuesXdays' => $this->model::attendancePerDay()
             ],
             [
                 'title' => "Tardanzas",
                 'valueMonth' => $total_tardinness,
                 'percent' => round(($total_tardinness /$total) * 100,2),
-                'valuesXdays' => [40,38,29,27,30,39],    
+                'valuesXdays' => $this->model::tardinessPerDay(),    
             ],
             [
                 'title' => "Faltas",
                 'valueMonth' => $total_absences,
                 'percent' => round(($total_absences /$total) * 100,2),
-                'valuesXdays' => [40,38,29,27,30,39],    
+                'valuesXdays' => $this->model::absencesPerDay(),    
             ],
         ];
         return [
@@ -75,11 +76,13 @@ class AttendanceRepository
         ];
     }
     private function days($date){
+        Carbon::setLocale('es');
+        setlocale(LC_ALL, 'es_ES');
         $first_date = Carbon::createFromFormat('Y-m-d',$date)->subMonth();
         $second_date = Carbon::createFromFormat('Y-m-d',$date);
         $days = CarbonPeriod::create($first_date, $second_date)->toArray();
         $daysN = array_map(function($i){
-            return $i->format('d F');
+            return $i->formatLocalized('%d %B');
         },$days);
         return $daysN;
     }

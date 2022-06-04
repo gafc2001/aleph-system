@@ -75,6 +75,8 @@ class User extends Authenticatable
                 $total_days++;
             }
         }
+        error_log('asistencias'.$this->assistances($date)->count());
+        error_log('total'.$total_days);
         $result = $total_days - $this->assistances($date)->count();
         return $result;
     }
