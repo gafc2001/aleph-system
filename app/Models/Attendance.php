@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isNull;
 
 class Attendance extends Model
 {
@@ -48,5 +52,47 @@ class Attendance extends Model
             array_push($userAttendances,$attendance);
         }
         return $userAttendances;
+    }
+    private static function validDays(array $days){
+        $validDays = [];
+        foreach($days as $day){
+            if($day->format('N') !=7){
+                $validDays[] = $day;
+            }
+        }
+        return $validDays;
+    }
+    public static function attendancePerDay(){
+        $days = CarbonPeriod::create('2022-01-18', '2022-02-17')->toArray();
+        $validDays = self::validDays($days);
+        $values = [];
+        foreach ($validDays as $date){
+            $r = Attendance::select(DB::raw("count(*) as total"))->where('date',$date)->groupBy('date')->first();
+            $values[] = $r!=null?$r->total:0;
+        }
+        return $values;
+    }
+    public static function tardinessPerDay(){
+        $days = CarbonPeriod::create('2022-01-18', '2022-02-17')->toArray();
+        $validDays = self::validDays($days);
+        $values = [];
+        foreach ($validDays as $date){
+            $r = Attendance::select(DB::raw("count(*) as total"))->where([['date',$date],['checkin_time','>','09:30']])->groupBy('date')->first();
+            $values[] = $r!=null?$r->total:0;
+        }
+        return $values;
+    }
+    public static function absencesPerDay(){
+        $days = CarbonPeriod::create('2022-01-18', '2022-02-17')->toArray();
+        $validDays = self::validDays($days);
+        $values = [];
+        foreach ($validDays as $date){
+            $total_users = User::where('last_name','!=','Farfan')->count();
+            $r = Attendance::select(DB::raw("count(*) as total"))->where('date',$date)->groupBy('date')->first();
+            error_log('users '. $total_users);
+            error_log('asistencias '. $r);
+            $values[] = $r!=null?$total_users - $r->total:0;
+        }
+        return $values;
     }
 }
