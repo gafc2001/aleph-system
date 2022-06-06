@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\V1;
 
-use App\Enums\Permission;
-use App\Enums\WorkfieldType;
+use App\Enums\PermissionEnum;
+use App\Enums\WorkfieldTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -28,20 +28,20 @@ class PermissionRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        error_log("Boolean : ".$request->typeAuthorization != Permission::PERMISO_PERSONAL); 
+        error_log("Boolean : ".$request->typeAuthorization != PermissionEnum::PERMISO_PERSONAL); 
         return [
             "idUser" => 'required|exists:users,id',
             "dateCreate" => 'required|date|date_format:Y-m-d',
             "department" => 'required',
-            "typeAuthorization" => ['required',new Enum(Permission::class)],
+            "typeAuthorization" => ['required',new Enum(PermissionEnum::class)],
             "startEvent" => 'required|date_format:H:i',
             "endEvent" => 'required|date_format:H:i|after:startEvent',
-            "typeDiscount" => [Rule::requiredIf($request->typeAuthorization == Permission::PERMISO_PERSONAL->value),
+            "typeDiscount" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::PERMISO_PERSONAL->value),
                                 'boolean'],
-            "quantityHours" => [Rule::requiredIf($request->typeAuthorization == Permission::SOLICITUD_HORAS_EXTRAS->value),'integer','gte:1'],
-            "justification" => [Rule::requiredIf($request->typeAuthorization == Permission::PERMISO_PERSONAL->value),'string'],
-            "typeService" => [Rule::requiredIf($request->typeAuthorization == Permission::TRABAJO_CAMPO->value),new Enum(WorkfieldType::class)],
-            "tasks" => [Rule::requiredIf($request->typeAuthorization != Permission::PERMISO_PERSONAL->value),
+            "quantityHours" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::SOLICITUD_HORAS_EXTRAS->value),'integer','gte:1'],
+            "justification" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::PERMISO_PERSONAL->value),'string'],
+            "typeService" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::TRABAJO_CAMPO->value),new Enum(WorkfieldTypeEnum::class)],
+            "tasks" => [Rule::requiredIf($request->typeAuthorization != PermissionEnum::PERMISO_PERSONAL->value),
                         'array',
                         'min:1'],
             "tasks.*" => "required_with:tasks,string",

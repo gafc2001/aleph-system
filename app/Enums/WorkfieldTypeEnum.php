@@ -1,7 +1,7 @@
 <?php
 namespace App\Enums;
 
-enum WorkfieldType : string {
+enum WorkfieldTypeEnum : string {
     case OPERATIVA = 'OPERATIVA';
     case ADMINISTRATIVA = 'ADMINISTRATIVA';
 }
