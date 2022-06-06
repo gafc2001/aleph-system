@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Exceptions\V1\EmptyAttendanceException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,7 +42,15 @@ class Handler extends ExceptionHandler
         $this->renderable(function (EmptyAttendanceException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'message' => 'No data found.'
+                    'message' => 'No hay datos de asitencia actualmente'
+                ], 404);
+            }
+        });
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    "message" => "No existe la ruta especificada",
+                    "path" => request()->server()["REQUEST_URI"],
                 ], 404);
             }
         });
