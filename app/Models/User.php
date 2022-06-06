@@ -52,9 +52,17 @@ class User extends Authenticatable
             set : fn($value) => Hash::make($value)
         );
     }
+
+    //Relationships
     public function attendances(){
         return $this->hasMany(Attendance::class);
     }
+    public function authorizations(){
+        return $this->hasMany(Authorization::class,'employee_id');
+    }
+
+
+
     public function assistances($date){
         $second_date = Carbon::createFromFormat('Y-m-d',$date);
         $first_date = Carbon::createFromFormat('Y-m-d',$date)->subMonth();

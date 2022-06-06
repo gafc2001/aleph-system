@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\AuthorizationStateEnum;
+use App\Enums\PermissionEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,12 +21,13 @@ return new class extends Migration
             $table->date('date');
             $table->time('estimated_start_time');
             $table->time('estimated_end_time');
-            $table->time('real_start_time');
-            $table->time('real_end_time');
-            $table->text('comments');
-            $table->enum('reference',['extra_hours','compesations','field_works','permissions']);
-            $table->boolean('was_accepted')->nullable();
-            $table->foreignId('authorized_by')->constrained('users');
+            $table->time('real_start_time')->nullable();
+            $table->time('real_end_time')->nullable();
+            $table->text('comments')->nullable();
+            $table->enum('reference',array_column(PermissionEnum::cases(),'value'));
+            $table->enum('state',array_column(AuthorizationStateEnum::cases(),'value'));
+            $table->unsignedBigInteger("authorized_by")->nullable();
+            $table->foreign("authorized_by")->references("id")->on("users");
             $table->foreignId('employee_id')->constrained('users');
             $table->timestamps();
         });

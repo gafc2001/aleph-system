@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class PersonalPermission extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        "justification"
+    ];
+
+    public function authorization(){
+        return $this->belongsTo(Authorization::class);
+    }
 }

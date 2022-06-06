@@ -32,7 +32,8 @@ class PermissionController extends Controller
      */
     public function store(PermissionRequest $request)
     {
-        return $this->repository->createPermission($request->all());
+        $id = $request->user()->id;
+        return $this->repository->createPermission($request->all(),$id);
     }
 
     /**
