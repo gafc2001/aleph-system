@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Exceptions\V1\EmptyAttendanceException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -54,5 +55,14 @@ class Handler extends ExceptionHandler
                 ], 404);
             }
         });
+        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+            return response()->json([
+                "message" => sprintf("El metodo %s no esta soportado para esta ruta",
+                            request()->server()["REQUEST_METHOD"]),
+                "path" => request()->server()["REQUEST_URI"],
+                "supported_methods" => $e->getHeaders()["Allow"],
+            ],405);
+        });
+        
     }
 }
