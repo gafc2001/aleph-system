@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PermissionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,7 +24,12 @@ class Authorizations extends Model
     public function autherizedBy(){
         return $this->belongsTo(User::class,'authorized_by');
     }
-    public function personalPermission(){
-        return $this->hasMany(PersonalPermission::class,'authorization_id');
+    public function permission(){
+        switch ($this->reference){
+            case PermissionEnum::PERMISO_PERSONAL->value: return $this->hasMany(PersonalPermission::class,'authorization_id');
+            case PermissionEnum::SOLICITUD_HORAS_EXTRAS->value: return $this->hasMany(ExtraHour::class,'authorization_id');
+            case PermissionEnum::TRABAJO_CAMPO->value: return $this->hasMany(FieldWork::class,'authorization_id');
+            case PermissionEnum::COMPENSACION->value: return $this->hasMany(Compesation::class,'authorization_id');
+        }
     }
 }

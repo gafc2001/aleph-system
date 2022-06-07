@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\V1;
 
+use App\Enums\FieldWorkEnum;
 use App\Enums\PermissionEnum;
-use App\Enums\WorkfieldTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -28,7 +28,6 @@ class PermissionRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        error_log("Boolean : ".$request->typeAuthorization != PermissionEnum::PERMISO_PERSONAL); 
         return [
             "idUser" => 'required|exists:users,id',
             "dateCreate" => 'required|date|date_format:Y-m-d',
@@ -40,7 +39,7 @@ class PermissionRequest extends FormRequest
                                 'boolean'],
             "quantityHours" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::SOLICITUD_HORAS_EXTRAS->value),'integer','gte:1'],
             "justification" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::PERMISO_PERSONAL->value),'string'],
-            "typeService" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::TRABAJO_CAMPO->value),new Enum(WorkfieldTypeEnum::class)],
+            "typeService" => [Rule::requiredIf($request->typeAuthorization == PermissionEnum::TRABAJO_CAMPO->value),new Enum(FieldWorkEnum::class)],
             "tasks" => [Rule::requiredIf($request->typeAuthorization != PermissionEnum::PERMISO_PERSONAL->value),
                         'array',
                         'min:1'],

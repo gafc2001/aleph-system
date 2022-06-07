@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExtraHour extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        "hours"
+    ];
 }
