@@ -47,7 +47,12 @@ class PermissionRequest extends FormRequest
     }
     public function messages(){
         return [
-            "typeAuthorization.enum" => "Tipo de autorizacion invalida"
+            "typeAuthorization.Illuminate\Validation\Rules\Enum" => [
+                "Tipo de autorizacion invalida [PERMISO_PERSONAL , SOLICITUD_HORAS_EXTRAS , TRABAJO_CAMPO , COMPENSACION]",
+            ],
+            "typeService.Illuminate\Validation\Rules\Enum" => [
+                "Tipo de trabajo campo invalido [OPERATIVA , ADMINISTRATIVA]",
+            ]
         ];
     }
 }

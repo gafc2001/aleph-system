@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Enums\PermissionEnum;
 use App\Models\Authorizations;
+use App\Models\Compesation;
 use App\Models\ExtraHour;
 use App\Models\FieldWork;
 use App\Models\PersonalPermission;
@@ -45,8 +46,8 @@ class PermissionRepository{
                 "hours" => $data->quantityHours
             ]);
             $authorization->permission()->save($extraHour);
-            return $authorization;
             DB::commit();
+            return $authorization;
         }catch(Exception $e){
             DB::rollback();
             return $e->getMessage();
@@ -60,15 +61,24 @@ class PermissionRepository{
                 "type" => $data->typeService,
             ]);
             $authorization->permission()->save($fieldWork);
-            return $authorization;
             DB::commit();
+            return $authorization;
         }catch(Exception $e){
             DB::rollback();
             return $e->getMessage();
         }
     }
     private function createCompensationsPermission($data,$user_id){
-        return $data;
+        try{
+            DB::beginTransaction();
+            $authorization = $this->createGeneralAuthorization($data,PermissionEnum::COMPENSACION,$user_id);
+            $compesation = new Compesation();
+            DB::commit();
+            return $authorization->permission()->save($compesation);
+        }catch(Exception $e){
+            DB::rollback();
+            return $e->getMessage();
+        }
 
     }
     private function createGeneralAuthorization($data,PermissionEnum $reference,$id) : Authorizations{
@@ -80,6 +90,10 @@ class PermissionRepository{
             'reference' => $reference->value,
             'employee_id' => $id
         ]);
+        if(!is_null($data->comments)){
+            $authorization->comments = $data->comments;
+            $authorization->save();
+        }
         return $authorization;
     }
 }

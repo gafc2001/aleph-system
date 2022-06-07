@@ -25,7 +25,7 @@ return new class extends Migration
             $table->time('real_end_time')->nullable();
             $table->text('comments')->nullable();
             $table->enum('reference',array_column(PermissionEnum::cases(),'value'));
-            $table->enum('state',array_column(AuthorizationStateEnum::cases(),'value'));
+            $table->enum('state',array_column(AuthorizationStateEnum::cases(),'value'))->default(AuthorizationStateEnum::SENDED->value);
             $table->unsignedBigInteger("authorized_by")->nullable();
             $table->foreign("authorized_by")->references("id")->on("users");
             $table->foreignId('employee_id')->constrained('users');
