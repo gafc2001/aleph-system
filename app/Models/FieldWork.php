@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FieldWork extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        "type"
+    ];
 }

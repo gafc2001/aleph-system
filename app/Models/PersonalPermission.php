@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExtraHour extends Model
+class PersonalPermission extends Model
 {
     protected $fillable = [
-        "hours"
+        "justification"
     ];
+
+    public function authorization(){
+        return $this->belongsTo(Authorization::class);
+    }
 }

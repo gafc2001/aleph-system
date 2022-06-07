@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Route;
 //Controllers
 use App\Http\Controllers\V1\AttendanceController;
 use App\Http\Controllers\V1\AuthController;
+use App\Http\Controllers\V1\PermissionController;
 
-
-Route::middleware('auth:api')->group(function (){
+Route::middleware(['auth:api','json'])->group(function (){
     Route::apiResource('attendances',AttendanceController::class);
     Route::post('upload/excel',[AttendanceController::class,'upload']);
+    Route::apiResource('permissions',PermissionController::class);
 });
 
 //Security
