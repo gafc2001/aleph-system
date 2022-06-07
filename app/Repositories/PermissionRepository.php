@@ -90,7 +90,7 @@ class PermissionRepository{
             'reference' => $reference->value,
             'employee_id' => $id
         ]);
-        if(!is_null($data->comments)){
+        if(isset($data->comments)){
             $authorization->comments = $data->comments;
             $authorization->save();
         }
