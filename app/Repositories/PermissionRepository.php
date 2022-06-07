@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Enums\PermissionEnum;
 use App\Models\Authorizations;
 use App\Models\ExtraHour;
+use App\Models\FieldWork;
 use App\Models\PersonalPermission;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +17,8 @@ class PermissionRepository{
         switch($data->typeAuthorization){
             case PermissionEnum::PERMISO_PERSONAL->value : return $this->createPersonalPermission($data,$user_id);
             case PermissionEnum::SOLICITUD_HORAS_EXTRAS->value : return $this->createExtraHoursePermission($data,$user_id);
-            case PermissionEnum::TRABAJO_CAMPO->value : return $this->createFieldWorkPermission($data);
-            case PermissionEnum::COMPENSACION->value : return $this->createCompensationsPermission($data);
+            case PermissionEnum::TRABAJO_CAMPO->value : return $this->createFieldWorkPermission($data,$user_id);
+            case PermissionEnum::COMPENSACION->value : return $this->createCompensationsPermission($data,$user_id);
         }
     }
     private function createPersonalPermission($data,$id){
@@ -51,11 +52,22 @@ class PermissionRepository{
             return $e->getMessage();
         }
     }
-    private function createFieldWorkPermission($data){
-        return $data;
-        
+    private function createFieldWorkPermission($data,$user_id){
+        try{
+            DB::beginTransaction();
+            $authorization = $this->createGeneralAuthorization($data,PermissionEnum::TRABAJO_CAMPO,$user_id);
+            $fieldWork = new FieldWork([
+                "type" => $data->typeService,
+            ]);
+            $authorization->permission()->save($fieldWork);
+            return $authorization;
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollback();
+            return $e->getMessage();
+        }
     }
-    private function createCompensationsPermission($data){
+    private function createCompensationsPermission($data,$user_id){
         return $data;
 
     }

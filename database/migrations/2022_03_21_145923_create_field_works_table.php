@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\FieldWorkEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('field_works', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['operativa','administrativa']);
+            $table->enum('type',array_column(FieldWorkEnum::cases(),'value'));
             $table->foreignId('authorization_id')->constrained('authorizations');
             $table->timestamps();
         });

@@ -29,9 +29,7 @@ class PermissionRequest extends FormRequest
     public function rules(Request $request)
     {
         return [
-            "idUser" => 'required|exists:users,id',
             "dateCreate" => 'required|date|date_format:Y-m-d',
-            "department" => 'required',
             "typeAuthorization" => ['required',new Enum(PermissionEnum::class)],
             "startEvent" => 'required|date_format:H:i',
             "endEvent" => 'required|date_format:H:i|after:startEvent',
