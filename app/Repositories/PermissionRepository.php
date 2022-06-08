@@ -8,11 +8,17 @@ use App\Models\ExtraHour;
 use App\Models\FieldWork;
 use App\Models\PersonalPermission;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class PermissionRepository{
 
-
+    public function getAllPermissions(){
+        return Authorizations::paginate();
+    }
+    public function getPermissionById($id){
+        return Authorizations::findOrFail($id);
+    }
     public function createPermission(array $array,$user_id){
         $data = json_decode(json_encode($array), FALSE);
         switch($data->typeAuthorization){

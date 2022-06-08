@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use App\Exceptions\V1\EmptyAttendanceException;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -40,29 +42,65 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
-        $this->renderable(function (EmptyAttendanceException $e, $request) {
+        $this->renderable(function (Exception $e, $request) {
             if ($request->is('api/*')) {
+                if($e instanceof EmptyAttendanceException){
+                    return response()->json([
+                        'message' => 'No hay datos de asitencia actualmente'
+                    ], 404);
+                }
+                if($e instanceof NotFoundHttpException){
+                    return response()->json([
+                        "message" => "No existe la ruta especificada",
+                        "path" => request()->server()["REQUEST_URI"],
+                        "ex" => $e instanceof NotFoundHttpException
+                    ], 404);
+                }
+                if($e instanceof MethodNotAllowedHttpException){
+                    return response()->json([
+                        "message" => sprintf("El metodo %s no esta soportado para esta ruta",
+                                    request()->server()["REQUEST_METHOD"]),
+                        "path" => request()->server()["REQUEST_URI"],
+                        "supported_methods" => $e->getHeaders()["Allow"],
+                    ],405);
+                }
+                if($e instanceof ModelNotFoundException){
+                    return response()->json([
+                        "message" => "No se encontro el registro",
+                        "path" => request()->server()["REQUEST_URI"],
+                    ],404);
+                }
+            }
+        });
+    }
+    public function render($request,Throwable $e){
+        if ($request->is('api/*')) {
+            if($e instanceof EmptyAttendanceException){
                 return response()->json([
                     'message' => 'No hay datos de asitencia actualmente'
                 ], 404);
             }
-        });
-        $this->renderable(function (NotFoundHttpException $e, $request) {
-            if ($request->is('api/*')) {
+            if($e instanceof NotFoundHttpException){
                 return response()->json([
                     "message" => "No existe la ruta especificada",
                     "path" => request()->server()["REQUEST_URI"],
+                    "ex" => $e instanceof NotFoundHttpException
                 ], 404);
             }
-        });
-        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
-            return response()->json([
-                "message" => sprintf("El metodo %s no esta soportado para esta ruta",
-                            request()->server()["REQUEST_METHOD"]),
-                "path" => request()->server()["REQUEST_URI"],
-                "supported_methods" => $e->getHeaders()["Allow"],
-            ],405);
-        });
-        
+            if($e instanceof MethodNotAllowedHttpException){
+                return response()->json([
+                    "message" => sprintf("El metodo %s no esta soportado para esta ruta",
+                                request()->server()["REQUEST_METHOD"]),
+                    "path" => request()->server()["REQUEST_URI"],
+                    "supported_methods" => $e->getHeaders()["Allow"],
+                ],405);
+            }
+            if($e instanceof ModelNotFoundException){
+                return response()->json([
+                    "message" => "No se encontro el registro",
+                    "path" => request()->server()["REQUEST_URI"],
+                ],404);
+            }
+        }
     }
 }
