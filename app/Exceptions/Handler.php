@@ -42,36 +42,6 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
-        $this->renderable(function (Exception $e, $request) {
-            if ($request->is('api/*')) {
-                if($e instanceof EmptyAttendanceException){
-                    return response()->json([
-                        'message' => 'No hay datos de asitencia actualmente'
-                    ], 404);
-                }
-                if($e instanceof NotFoundHttpException){
-                    return response()->json([
-                        "message" => "No existe la ruta especificada",
-                        "path" => request()->server()["REQUEST_URI"],
-                        "ex" => $e instanceof NotFoundHttpException
-                    ], 404);
-                }
-                if($e instanceof MethodNotAllowedHttpException){
-                    return response()->json([
-                        "message" => sprintf("El metodo %s no esta soportado para esta ruta",
-                                    request()->server()["REQUEST_METHOD"]),
-                        "path" => request()->server()["REQUEST_URI"],
-                        "supported_methods" => $e->getHeaders()["Allow"],
-                    ],405);
-                }
-                if($e instanceof ModelNotFoundException){
-                    return response()->json([
-                        "message" => "No se encontro el registro",
-                        "path" => request()->server()["REQUEST_URI"],
-                    ],404);
-                }
-            }
-        });
     }
     public function render($request,Throwable $e){
         if ($request->is('api/*')) {
@@ -97,10 +67,14 @@ class Handler extends ExceptionHandler
             }
             if($e instanceof ModelNotFoundException){
                 return response()->json([
-                    "message" => "No se encontro el registro",
+                    "message" => "No se encontro el registro con el ID : ". $e->getIds()[0],
                     "path" => request()->server()["REQUEST_URI"],
+                    "model" => $e->getModel()
                 ],404);
             }
+            return response()->json([
+                "message" => $e->getMessage(),
+            ],500);
         }
     }
 }
