@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\PermissionRequest;
+use App\Http\Resources\V1\Permission\PermissionCollection;
+use App\Http\Resources\V1\Permission\PermissionResource;
 use App\Repositories\PermissionRepository;
 use Illuminate\Http\Request;
 
@@ -21,7 +23,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        $result = $this->repository->getAllPermissions();
+        return new PermissionCollection($result);
     }
 
     /**
@@ -44,7 +47,8 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
-        //
+        $permission = $this->repository->getPermissionById($id);
+        return new PermissionResource($permission);
     }
 
     /**
