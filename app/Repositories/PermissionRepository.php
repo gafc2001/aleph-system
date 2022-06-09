@@ -30,10 +30,11 @@ class PermissionRepository{
             case PermissionEnum::COMPENSACION->value : return $this->createCompensationsPermission($data,$user_id);
         }
     }
-    public function updatePermissionState(array $array,$id){
+    public function updatePermissionState(array $array,$id,$user_id){
         $data = json_decode(json_encode($array), FALSE);
         $permission = Authorizations::findOrFail($id);
         $permission->state = $data->state;
+        $permission->authorized_by = $user_id;
         $permission->save();
         return $permission;
     }
