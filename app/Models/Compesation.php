@@ -13,7 +13,11 @@ class Compesation extends Model
     ];    
     protected function tasks() : Attribute{
         return Attribute::make(
-            get: fn($value) => $this->authorization()->first()->tasks()->get(),
+            get: fn($value) => $this->authorization()
+                    ->first()
+                    ->tasks()
+                    ->get()
+                    ->map(fn($e) => $e->task),
         );
     }
     public function authorization(){
