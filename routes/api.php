@@ -12,6 +12,7 @@ Route::middleware(['auth:api','json'])->group(function (){
     Route::apiResource('attendances',AttendanceController::class);
     Route::post('upload/excel',[AttendanceController::class,'upload']);
     Route::apiResource('permissions',PermissionController::class);
+    Route::get("users/permissions",[PermissionController::class,'listPermissionsByUser']);
 });
 
 //Security

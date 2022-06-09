@@ -68,7 +68,11 @@ class PermissionController extends Controller
             "update_at" => $permission->updated_at,
         ]);
     }
-
+    public function listPermissionsByUser(Request $request){
+        $id = $request->user()->id;
+        $permissions = $this->repository->listPermissionsByUser($id);
+        return new PermissionCollection($permissions);
+    }
     /**
      * Remove the specified resource from storage.
      *
