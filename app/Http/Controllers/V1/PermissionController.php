@@ -65,6 +65,7 @@ class PermissionController extends Controller
         return response()->json([
             "message" => "Se cambio el estado del permiso con id : $id",
             "state" => $permission->state,
+            "update_at" => $permission->updated_at,
         ]);
     }
 

@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use App\Enums\PermissionEnum;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class Authorizations extends Model
 {
@@ -17,6 +20,23 @@ class Authorizations extends Model
         'state',
         'employee_id'
     ];
+
+    protected $dates = [
+        "created_at",
+        "updated_at",
+    ];
+    public function createdAt() : Attribute{
+        return Attribute::make(
+            get: fn($value) => Carbon::parse($value)->subHours(5),
+            set: fn($value) => Carbon::parse($value)->subHours(5)
+        );
+    }
+    public function updatedAt() : Attribute{
+        return Attribute::make(
+            get: fn($value) => Carbon::parse($value)->subHours(5),
+            set: fn($value) => Carbon::parse($value)->subHours(5)
+        );
+    }
 
     public function employee(){
         return $this->belongsTo(User::class,'employee_id');
