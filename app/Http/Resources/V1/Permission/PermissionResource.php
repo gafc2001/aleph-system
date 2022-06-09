@@ -28,6 +28,8 @@ class PermissionResource extends JsonResource
             "state" => $this->state,
             "authorized_by" => is_null($this->authorized_by) ? "Sin auntorizacion" : $this->autherizedBy()->first()->fullName,
             "employee_id" => $this->employee()->first()->fullName,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
     }
 }

@@ -7,5 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        "task",
+        "authorization_id",
+    ];
+
+    public function authorization(){
+        return $this->belongsTo(Authorization::class,"authorzation_id","id");
+    }
 }

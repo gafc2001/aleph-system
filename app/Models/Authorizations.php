@@ -32,4 +32,10 @@ class Authorizations extends Model
             case PermissionEnum::COMPENSACION->value: return $this->hasMany(Compesation::class,'authorization_id');
         }
     }
+    public function tasks(){
+        if($this->references != PermissionEnum::PERMISO_PERSONAL->value){
+            return $this->hasMany(Task::class,"authorization_id","id");
+        }
+        return null;
+    }
 }
