@@ -13,9 +13,10 @@ use App\Http\Controllers\V1\PermissionController;
 Route::middleware(['auth:api',"scope:admin-access"])->group(function (){
     Route::apiResource('attendances',AttendanceController::class);
     Route::post('upload/excel',[AttendanceController::class,'upload']);
-    Route::apiResource('permissions',PermissionController::class);
+    
 });
 
+Route::apiResource('permissions',PermissionController::class)->except("destroy");
 //employee
 Route::middleware(['auth:api',"scope:employee-access"])->group(function (){
     Route::get("users/permissions",[PermissionController::class,'listPermissionsByUser']);
