@@ -6,6 +6,7 @@ use App\Exceptions\V1\EmptyAttendanceException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Laravel\Passport\Exceptions\MissingScopeException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -72,8 +73,15 @@ class Handler extends ExceptionHandler
                     "model" => $e->getModel()
                 ],404);
             }
+            if($e instanceof MissingScopeException){
+                return response()->json([
+                    "message" => "No tienes los permisos suficientes",
+                    "path" => request()->server()["REQUEST_URI"],
+                ],403);
+            }
             return response()->json([
                 "message" => $e->getMessage(),
+                "e" => $e->getTrace(),
             ],500);
         }
     }

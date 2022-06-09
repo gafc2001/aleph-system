@@ -31,5 +31,14 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(now()->addDays(7));
         Passport::refreshTokensExpireIn(now()->addMonths(3));
         Passport::personalAccessTokensExpireIn(now()->addMonths(5));
+
+        Passport::tokensCan([
+            "admin-access" => "Manejar todo el acceso a adminstracion",
+            "employee-access" => "Permisos y ver sus asistencias"
+        ]);
+
+        Passport::setDefaultScope([
+            "employee-access"
+        ]);
     }
 }

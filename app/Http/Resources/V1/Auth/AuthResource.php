@@ -14,7 +14,8 @@ class AuthResource extends JsonResource
      */
     public function toArray($request)
     {
-        $credentials = $this->createToken($this->id);
+        $access = $this->department()->first()->name == "Administracion"?"admin-access":"employee-access";
+        $credentials = $this->createToken($this->id,[$access]);
         return [
             "message" => "Success",
             'data' => [
@@ -28,7 +29,8 @@ class AuthResource extends JsonResource
                 "token_type" => "Bearer",
                 "token" => $credentials->accessToken,
                 "client_id" => $credentials->token->client_id,
-                "expires_at" => $credentials->token->expires_at
+                "expires_at" => $credentials->token->expires_at,
+                "scopes" => $access,
             ],
         ];
     }

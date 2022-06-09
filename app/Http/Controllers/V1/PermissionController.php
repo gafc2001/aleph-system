@@ -16,6 +16,9 @@ class PermissionController extends Controller
 
     public function __construct(PermissionRepository $repository){
         $this->repository = $repository;
+        $this->middleware("auth:api");
+        $this->middleware("scope:admin-access")->only(["index","update"]);
+        $this->middleware("scope:employee-access")->only(["store","listPermissionsByUser"]);
     }
     /**
      * Display a listing of the resource.
@@ -73,14 +76,5 @@ class PermissionController extends Controller
         $permissions = $this->repository->listPermissionsByUser($id);
         return new PermissionCollection($permissions);
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }
