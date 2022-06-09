@@ -81,7 +81,6 @@ class Handler extends ExceptionHandler
             }
             return response()->json([
                 "message" => $e->getMessage(),
-                "e" => $e->getTrace(),
             ],500);
         }
     }
