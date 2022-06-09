@@ -7,6 +7,7 @@ use App\Models\Compesation;
 use App\Models\ExtraHour;
 use App\Models\FieldWork;
 use App\Models\PersonalPermission;
+use App\Models\Task;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -99,6 +100,9 @@ class PermissionRepository{
         if(isset($data->comments)){
             $authorization->comments = $data->comments;
             $authorization->save();
+        }
+        if($data->typeAuthorization != PermissionEnum::PERMISO_PERSONAL->value){
+            Task::insert(array_map(fn($e)=>["task"=>$e,"authorization_id" => $authorization->id],$data->tasks));
         }
         return $authorization;
     }
