@@ -64,10 +64,15 @@ class PermissionController extends Controller
      */
     public function update(UpdateStatePermission $request, $id)
     {
-        $permission = $this->repository->updatePermissionState($request->all(),$id);
+        $user_id = $request->user()->id;
+        $permission = $this->repository->updatePermissionState($request->all(),$id,$user_id);
         return response()->json([
             "message" => "Se cambio el estado del permiso con id : $id",
             "state" => $permission->state,
+            "authorized_by" => [
+                "id" => $permission->authorized_by,
+                "full_name" => $permission->autherizedBy()->first()->full_name,
+            ],
             "update_at" => $permission->updated_at,
         ]);
     }
