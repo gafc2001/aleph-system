@@ -8,6 +8,7 @@ use App\Models\ExtraHour;
 use App\Models\FieldWork;
 use App\Models\PersonalPermission;
 use App\Models\Task;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,9 @@ class PermissionRepository{
         $permission->state = $data->state;
         $permission->save();
         return $permission;
+    }
+    public function listPermissionsByUser($id){
+        return User::findOrFail($id)->authorizations()->get();
     }
     private function createPersonalPermission($data,$id){
         try{

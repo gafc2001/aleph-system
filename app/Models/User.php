@@ -58,7 +58,7 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
     public function authorizations(){
-        return $this->hasMany(Authorization::class,'employee_id');
+        return $this->hasMany(Authorizations::class,'employee_id');
     }
 
 

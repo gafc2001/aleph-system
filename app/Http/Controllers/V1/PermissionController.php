@@ -65,9 +65,14 @@ class PermissionController extends Controller
         return response()->json([
             "message" => "Se cambio el estado del permiso con id : $id",
             "state" => $permission->state,
+            "update_at" => $permission->updated_at,
         ]);
     }
-
+    public function listPermissionsByUser(Request $request){
+        $id = $request->user()->id;
+        $permissions = $this->repository->listPermissionsByUser($id);
+        return new PermissionCollection($permissions);
+    }
     /**
      * Remove the specified resource from storage.
      *
