@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->decimal('net_salary',9,2)->nullable();
-            $table->unsignedBigInteger('department_id')->nullable();
+            $table->unsignedBigInteger('department_id')->default("2");
             $table->foreign('department_id')->references('id')->on('departments');
             $table->rememberToken();
             $table->timestamps();

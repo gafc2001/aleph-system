@@ -60,7 +60,9 @@ class User extends Authenticatable
     public function authorizations(){
         return $this->hasMany(Authorizations::class,'employee_id');
     }
-
+    public function department(){
+        return $this->belongsTo(Department::class,"department_id");
+    }
 
 
     public function assistances($date){
