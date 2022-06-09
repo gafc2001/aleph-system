@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class PersonalPermission extends Model
 {
     protected $fillable = [
-        "justification"
+        "justification",
+        "type_discount"
     ];
     protected $appends = [
         "tasks"
+    ];
+    protected $casts = [
+        "type_discount" => "boolean",
     ];
     public function authorization(){
         return $this->belongsTo(Authorizations::class);

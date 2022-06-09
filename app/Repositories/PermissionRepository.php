@@ -29,12 +29,20 @@ class PermissionRepository{
             case PermissionEnum::COMPENSACION->value : return $this->createCompensationsPermission($data,$user_id);
         }
     }
+    public function updatePermissionState(array $array,$id){
+        $data = json_decode(json_encode($array), FALSE);
+        $permission = Authorizations::findOrFail($id);
+        $permission->state = $data->state;
+        $permission->save();
+        return $permission;
+    }
     private function createPersonalPermission($data,$id){
         try{
             DB::beginTransaction();
             $authorization = $this->createGeneralAuthorization($data,PermissionEnum::PERMISO_PERSONAL,$id);
             $personaPermission = new PersonalPermission([
-                "justification" => $data->justification
+                "justification" => $data->justification,
+                "type_discount" => $data->typeDiscount,
             ]); 
             $authorization->permission()->save($personaPermission);
             DB::commit();

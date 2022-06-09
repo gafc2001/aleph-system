@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\PermissionRequest;
+use App\Http\Requests\V1\Permission\PermissionRequest;
+use App\Http\Requests\V1\Permission\UpdateStatePermission;
 use App\Http\Resources\V1\Permission\PermissionCollection;
 use App\Http\Resources\V1\Permission\PermissionResource;
 use App\Repositories\PermissionRepository;
@@ -58,9 +59,13 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateStatePermission $request, $id)
     {
-        //
+        $permission = $this->repository->updatePermissionState($request->all(),$id);
+        return response()->json([
+            "message" => "Se cambio el estado del permiso con id : $id",
+            "state" => $permission->state,
+        ]);
     }
 
     /**

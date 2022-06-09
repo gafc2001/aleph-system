@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\V1;
+namespace App\Http\Requests\V1\Permission;
 
 use App\Enums\FieldWorkEnum;
 use App\Enums\PermissionEnum;
