@@ -34,7 +34,8 @@ class PermissionRepository{
             DB::beginTransaction();
             $authorization = $this->createGeneralAuthorization($data,PermissionEnum::PERMISO_PERSONAL,$id);
             $personaPermission = new PersonalPermission([
-                "justification" => $data->justification
+                "justification" => $data->justification,
+                "type_discount" => $data->typeDiscount,
             ]); 
             $authorization->permission()->save($personaPermission);
             DB::commit();
