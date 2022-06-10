@@ -27,7 +27,9 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
+    protected $appends = [
+        "tasks"
+    ]; 
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -52,6 +54,11 @@ class User extends Authenticatable
             set : fn($value) => Hash::make($value)
         );
     }
+    public function scopes() : Attribute{
+        return Attribute::make(
+            get : fn($value) => $this->department()->first()->name == "Administracion"?"admin-access":"employee-access"
+        );
+    }
 
     //Relationships
     public function attendances(){
@@ -64,7 +71,7 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class,"department_id");
     }
 
-
+    
     public function assistances($date){
         $second_date = Carbon::createFromFormat('Y-m-d',$date);
         $first_date = Carbon::createFromFormat('Y-m-d',$date)->subMonth();
