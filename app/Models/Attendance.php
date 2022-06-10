@@ -27,6 +27,16 @@ class Attendance extends Model
         "sabado",
         "domingo",
     ];
+    public function createdAt() : Attribute{
+        return Attribute::make(
+            get: fn($value) => Carbon::parse($value)->format("Y-m-d\TH:i:s.u\Z"),
+        );
+    }
+    public function updatedAt() : Attribute{
+        return Attribute::make(
+            get: fn($value) => Carbon::parse($value)->format("Y-m-d\TH:i:s.u\Z")
+        );
+    }
     public function user(){
         return $this->belongsTo(User::class);
     }

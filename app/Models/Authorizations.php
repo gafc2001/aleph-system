@@ -27,14 +27,12 @@ class Authorizations extends Model
     ];
     public function createdAt() : Attribute{
         return Attribute::make(
-            get: fn($value) => Carbon::parse($value)->subHours(5),
-            set: fn($value) => Carbon::parse($value)->subHours(5)
+            get: fn($value) => Carbon::parse($value)->format("Y-m-d\TH:i:s.u\Z"),
         );
     }
     public function updatedAt() : Attribute{
         return Attribute::make(
-            get: fn($value) => Carbon::parse($value)->subHours(5),
-            set: fn($value) => Carbon::parse($value)->subHours(5)
+            get: fn($value) => Carbon::parse($value)->format("Y-m-d\TH:i:s.u\Z")
         );
     }
 

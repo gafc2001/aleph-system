@@ -24,7 +24,7 @@ class PermissionResource extends JsonResource
             "real_end_time" => $this->real_end_time,
             "comments" => $this->comments,
             "reference" => $this->reference,
-            "permission_detail" => $this->permission()->first(),
+            "permission_detail" => $this->permission()->first()->makeHidden(["created_at","updated_at"],),
             "state" => $this->state,
             "authorized_by" => is_null($this->authorized_by) ? "Sin auntorizacion" : $this->autherizedBy()->first()->fullName,
             "employee_id" => $this->employee()->first()->fullName,
