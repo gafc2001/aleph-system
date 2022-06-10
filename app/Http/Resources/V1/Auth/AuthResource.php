@@ -14,7 +14,7 @@ class AuthResource extends JsonResource
      */
     public function toArray($request)
     {
-        $credentials = $this->createToken($this->id,[$this->access]);
+        $credentials = $this->createToken($this->id,[$this->scopes]);
         return [
             "message" => "Success",
             'data' => [
